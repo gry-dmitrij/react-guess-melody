@@ -1,19 +1,10 @@
+import Logo from '../../logo/logo';
+
 function QuestionGenre(): JSX.Element {
   return (
     <section className="game game--genre">
       <header className="game__header">
-        <a
-          className="game__back"
-          href="#"
-        >
-          <span className="visually-hidden">Сыграть ещё раз</span>
-          <img
-            className="game__logo"
-            src="img/melody-logo-ginger.png"
-            alt="Угадай мелодию"
-          />
-        </a>
-
+        <Logo />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="timer"
