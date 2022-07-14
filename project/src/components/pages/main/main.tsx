@@ -1,14 +1,22 @@
+import {useNavigate} from 'react-router-dom';
+import {AppRoute} from '../../../const/route';
+
 type WelcomeScreenProps = {
   errorsCount: number
 }
 
 function Main({errorsCount}: WelcomeScreenProps): JSX.Element {
+  const navigate = useNavigate();
+
   return (
     <section className="welcome">
       <div className="welcome__logo">
         <img src="img/melody-logo.png" alt="Угадай мелодию" width="186" height="83" />
       </div>
-      <button className="welcome__button">
+      <button
+        className="welcome__button"
+        onClick={() => navigate(AppRoute.Game)}
+      >
         <span className="visually-hidden">Начать игру</span>
       </button>
       <h2 className="welcome__rules-title">Правила игры</h2>
