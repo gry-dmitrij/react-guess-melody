@@ -5,9 +5,10 @@ import {ChangeEvent} from 'react';
 type QuestionArtistScreenProps = {
   question: QuestionArtist,
   onAnswer: (question: QuestionArtist, answer: UserArtistQuestionAnswer) => void,
+  renderPlayer: (src: string, playerIndex: number) => JSX.Element,
 }
 
-function QuestionArtistScreen({question, onAnswer}: QuestionArtistScreenProps): JSX.Element {
+function QuestionArtistScreen({question, onAnswer, renderPlayer}: QuestionArtistScreenProps): JSX.Element {
   const {answers, song} = question;
 
   return (
@@ -42,14 +43,7 @@ function QuestionArtistScreen({question, onAnswer}: QuestionArtistScreenProps): 
         <h2 className="game__title">Кто исполняет эту песню?</h2>
         <div className="game__track">
           <div className="track">
-            <button
-              className="track__button track__button--play"
-              type="button"
-            >
-            </button>
-            <div className="track__status">
-              <audio src={song.src} />
-            </div>
+            {renderPlayer(song.src, 0)}
           </div>
         </div>
 

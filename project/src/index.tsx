@@ -4,6 +4,12 @@ import App from './components/app/app';
 import {BrowserRouter} from 'react-router-dom';
 import {questions} from './mocks/questions';
 
+// declare global {
+//   interface Window {
+//     obj: any
+//   }
+// }
+
 const SETTINGS = {
   ERRORS_COUNT: 3,
 };
