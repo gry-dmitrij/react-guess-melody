@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app';
 import {BrowserRouter} from 'react-router-dom';
-import {questions} from './mocks/questions';
+import {Provider} from 'react-redux';
+import {reducer} from './store/reducer';
+import {configureStore} from '@reduxjs/toolkit';
 
 // declare global {
 //   interface Window {
@@ -10,19 +12,19 @@ import {questions} from './mocks/questions';
 //   }
 // }
 
-const SETTINGS = {
-  ERRORS_COUNT: 3,
-};
-
 const root = ReactDOM.createRoot(
   // eslint-disable-next-line
   document.getElementById('root')!,
 );
 
+const store = configureStore({reducer});
+
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App errorsCount={SETTINGS.ERRORS_COUNT} questions={questions}/>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
 );

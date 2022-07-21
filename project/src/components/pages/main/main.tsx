@@ -1,11 +1,24 @@
 import {useNavigate} from 'react-router-dom';
 import {AppRoute} from '../../../const/route';
+import {bindActionCreators, Dispatch} from '@reduxjs/toolkit';
+import {Actions} from '../../../types/action';
+import {resetGame as resetGameState} from '../../../store/action';
+import {connect, ConnectedProps} from 'react-redux';
 
 type WelcomeScreenProps = {
   errorsCount: number
 }
 
-function Main({errorsCount}: WelcomeScreenProps): JSX.Element {
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
+  onResetGame: resetGameState,
+}, dispatch);
+
+const connector = connect(null, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & WelcomeScreenProps;
+
+function Main({errorsCount, onResetGame}: ConnectedComponentProps): JSX.Element {
   const navigate = useNavigate();
 
   return (
@@ -15,7 +28,10 @@ function Main({errorsCount}: WelcomeScreenProps): JSX.Element {
       </div>
       <button
         className="welcome__button"
-        onClick={() => navigate(AppRoute.Game)}
+        onClick={() => {
+          onResetGame();
+          navigate(AppRoute.Game);
+        }}
       >
         <span className="visually-hidden">Начать игру</span>
       </button>
@@ -30,4 +46,5 @@ function Main({errorsCount}: WelcomeScreenProps): JSX.Element {
   );
 }
 
-export default Main;
+export {Main};
+export default connector(Main);

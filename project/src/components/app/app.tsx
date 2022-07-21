@@ -4,20 +4,15 @@ import {AppRoute} from '../../const/route';
 import Main from '../pages/main/main';
 import Login from '../pages/login/login';
 import FailTries from '../pages/fail-tries/fail-tries';
-import {Questions} from '../../types/question';
 import GameScreen from '../pages/game-screen/game-screen';
+import {MAX_MISTAKE_COUNT} from '../../const/game-state';
 
-type AppScreenProps = {
-  errorsCount: number;
-  questions: Questions;
-}
-
-function App({errorsCount, questions}: AppScreenProps): JSX.Element {
+function App(): JSX.Element {
   return (
     <Routes>
-      <Route path={AppRoute.Root} element={<Main errorsCount={errorsCount} />} />
+      <Route path={AppRoute.Root} element={<Main errorsCount={MAX_MISTAKE_COUNT} />} />
       <Route path={AppRoute.Game} element={
-        <GameScreen questions={questions} />
+        <GameScreen />
       }
       />
       <Route path={AppRoute.Login} element={<Login />} />
