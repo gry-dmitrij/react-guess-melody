@@ -5,3 +5,9 @@ export enum AppRoute {
   Root = '/',
   Game = '/game',
 }
+
+export enum APIRoute {
+  Questions = '/questions',
+  Login = '/login',
+  Logout = '/logout',
+}

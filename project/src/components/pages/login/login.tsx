@@ -1,4 +1,39 @@
-function Login(): JSX.Element {
+import {ThunkAppDispatch} from '../../../types/action';
+import {AuthData} from '../../../types/auth-data';
+import {loginAction} from '../../../store/api-actions';
+import {connect, ConnectedProps} from 'react-redux';
+import {FormEvent, useRef} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {AppRoute} from '../../../const/route';
+
+const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
+  onSubmit(authData: AuthData) {
+    dispatch(loginAction(authData));
+  },
+});
+
+const connector = connect(null, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function Login(props: PropsFromRedux): JSX.Element {
+  const {onSubmit} = props;
+  const loginRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    if (loginRef.current !== null && passwordRef.current !== null) {
+      onSubmit({
+        login: loginRef.current.value,
+        password: passwordRef.current.value,
+      });
+    }
+  };
+
   return (
     <section className="login">
       <div className="login__logo">
@@ -13,6 +48,7 @@ function Login(): JSX.Element {
       <form
         className="login__form"
         action=""
+        onSubmit={handleSubmit}
       >
         <p className="login__field">
           <label
@@ -21,6 +57,7 @@ function Login(): JSX.Element {
           >Логин
           </label>
           <input
+            ref={loginRef}
             className="login__input"
             type="text"
             name="name"
@@ -34,6 +71,7 @@ function Login(): JSX.Element {
           >Пароль
           </label>
           <input
+            ref={passwordRef}
             className="login__input"
             type="text"
             name="password"
@@ -48,6 +86,7 @@ function Login(): JSX.Element {
         </button>
       </form>
       <button
+        onClick={() => navigate(AppRoute.Game)}
         className="replay"
         type="button"
       >Сыграть ещё раз
@@ -56,5 +95,5 @@ function Login(): JSX.Element {
   );
 }
 
-
-export default Login;
+export {Login};
+export default connector(Login);

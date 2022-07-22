@@ -1,10 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app';
-import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {reducer} from './store/reducer';
 import {configureStore} from '@reduxjs/toolkit';
+import {createAPI} from './services/api';
+import {requireAuthorization} from './store/action';
+import {AuthorizationStatus} from './const/authorization-status';
+import {ThunkAppDispatch} from './types/action';
+import {checkAuthAction, fetchQuestionAction} from './store/api-actions';
+import HistoryRouter from './components/history-router/history-router';
+import browserHistory from './browser-history';
 
 // declare global {
 //   interface Window {
@@ -17,14 +23,29 @@ const root = ReactDOM.createRoot(
   document.getElementById('root')!,
 );
 
-const store = configureStore({reducer});
+const api = createAPI(
+  () => store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth)),
+);
+
+const store = configureStore({
+  reducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: {
+        extraArgument: api,
+      },
+    }),
+});
+
+(store.dispatch as ThunkAppDispatch)(checkAuthAction());
+(store.dispatch as ThunkAppDispatch)(fetchQuestionAction());
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <HistoryRouter history={browserHistory}>
         <App />
-      </BrowserRouter>
+      </HistoryRouter>
     </Provider>
   </React.StrictMode>,
 );

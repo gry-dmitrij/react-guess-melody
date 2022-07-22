@@ -3,14 +3,16 @@ import {AppRoute} from '../../const/route';
 import {AuthorizationStatus} from '../../const/authorization-status';
 
 type PrivateRouteProps = RouteProps & {
-  authorizationStatus: AuthorizationStatus;
+  authorizationStatus: AuthorizationStatus,
+  children: JSX.Element,
 }
 
 function PrivateRoute(props: PrivateRouteProps): JSX.Element {
-  const {authorizationStatus} = props;
+  const {authorizationStatus, children} = props;
   if (authorizationStatus !== AuthorizationStatus.Auth) {
     return <Navigate to={AppRoute.Login} />;
   }
-  return <Route {...props} />;
+  return children;
 }
 
+export default PrivateRoute;

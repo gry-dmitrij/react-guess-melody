@@ -4,7 +4,7 @@ import {
   QuestionGenre,
   UserAnswer
 } from '../../../types/question';
-import {GameType} from '../../../const/game-state';
+import {GameType, MAX_MISTAKE_COUNT} from '../../../const/game-state';
 import {Navigate} from 'react-router-dom';
 import {AppRoute} from '../../../const/route';
 import QuestionArtistScreen from '../question-artist/question-artist-screen';
@@ -41,8 +41,12 @@ type ConnectedComponentsProps = PropsFromRedux;
 function GameScreen({questions, step, mistakes, onUserAnswer}: ConnectedComponentsProps): JSX.Element {
   const question = questions[step];
 
+  if (mistakes >= MAX_MISTAKE_COUNT) {
+    return <Navigate to={AppRoute.Lose} />;
+  }
+
   if (step >= questions.length || !questions) {
-    return <Navigate to={AppRoute.Root} />;
+    return <Navigate to={AppRoute.Result} />;
   }
 
   switch (question.type) {
