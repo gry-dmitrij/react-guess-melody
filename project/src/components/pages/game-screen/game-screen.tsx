@@ -10,35 +10,27 @@ import {AppRoute} from '../../../const/route';
 import QuestionArtistScreen from '../question-artist/question-artist-screen';
 import QuestionGenreScreen from '../question-genre/question-genre-screen';
 import withAudioPlayer from '../../../hocs/with-audio-player/with-audio-player';
-import {State} from '../../../types/state';
-import {Dispatch} from '@reduxjs/toolkit';
-import {Actions} from '../../../types/action';
 import {checkUserAnswer, incrementStep} from '../../../store/action';
-import {connect, ConnectedProps} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Mistakes from '../../mistakes/mistakes';
+import {getMistakes, getStep} from '../../../store/game-process/selectors';
+import {getQuestions} from '../../../store/game-data/selectors';
 
 const QuestionArtistScreenWrapped = withAudioPlayer(QuestionArtistScreen);
 const QuestionGenreScreenWrapped = withAudioPlayer(QuestionGenreScreen);
 
-const mapStateToProps = ({step, mistakes, questions}: State) => ({
-  step,
-  mistakes,
-  questions,
-});
+function GameScreen(): JSX.Element {
+  const step = useSelector(getStep);
+  const mistakes = useSelector(getMistakes);
+  const questions = useSelector(getQuestions);
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  onUserAnswer(question: Question, userAnswer: UserAnswer) {
+  const dispatch = useDispatch();
+
+  const onUserAnswer = (question: Question, userAnswer: UserAnswer) => {
     dispatch(incrementStep());
     dispatch(checkUserAnswer(question, userAnswer));
-  },
-});
+  };
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentsProps = PropsFromRedux;
-
-function GameScreen({questions, step, mistakes, onUserAnswer}: ConnectedComponentsProps): JSX.Element {
   const question = questions[step];
 
   if (mistakes >= MAX_MISTAKE_COUNT) {
@@ -75,5 +67,4 @@ function GameScreen({questions, step, mistakes, onUserAnswer}: ConnectedComponen
   }
 }
 
-export {GameScreen};
-export default connector(GameScreen);
+export default GameScreen;

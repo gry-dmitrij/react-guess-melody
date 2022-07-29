@@ -20,6 +20,19 @@ export const checkAuthAction = (): ThunkActionResult =>
       });
   };
 
+// export const loginAction = createAsyncThunk<void, AuthData, {
+//   dispatch: AppDispatch,
+//   state: State,
+//   extra: AxiosInstance
+// }>(
+//   'user/login',
+//   async ({login: email, password}, {dispatch, extra: api}) => {
+//     const {data: {token}} = await api.post<{token: Token}>(APIRoute.Login, {email, password});
+//     saveToken(token);
+//     dispatch(requireAuthorization(AuthorizationStatus.Auth));
+//   }
+// );
+
 export const loginAction = ({login: email, password}: AuthData): ThunkActionResult =>
   async (dispatch, _getState, api) => {
     const {data: {token}} = await api.post<{token: Token}>(APIRoute.Login, {email, password});

@@ -1,25 +1,15 @@
 import {useNavigate} from 'react-router-dom';
 import {AppRoute} from '../../../const/route';
-import {bindActionCreators, Dispatch} from '@reduxjs/toolkit';
-import {Actions} from '../../../types/action';
-import {resetGame as resetGameState} from '../../../store/action';
-import {connect, ConnectedProps} from 'react-redux';
+import {useDispatch} from 'react-redux';
+import {resetGame} from '../../../store/action';
 
 type WelcomeScreenProps = {
   errorsCount: number
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onResetGame: resetGameState,
-}, dispatch);
-
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & WelcomeScreenProps;
-
-function Main({errorsCount, onResetGame}: ConnectedComponentProps): JSX.Element {
+function Main({errorsCount}: WelcomeScreenProps): JSX.Element {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <section className="welcome">
@@ -29,7 +19,7 @@ function Main({errorsCount, onResetGame}: ConnectedComponentProps): JSX.Element 
       <button
         className="welcome__button"
         onClick={() => {
-          onResetGame();
+          dispatch(resetGame());
           navigate(AppRoute.Game);
         }}
       >
@@ -46,5 +36,4 @@ function Main({errorsCount, onResetGame}: ConnectedComponentProps): JSX.Element 
   );
 }
 
-export {Main};
-export default connector(Main);
+export default Main;

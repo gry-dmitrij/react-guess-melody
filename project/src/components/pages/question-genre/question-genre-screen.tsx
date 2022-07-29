@@ -1,6 +1,8 @@
 import Logo from '../../logo/logo';
 import {QuestionGenre, UserGenreQuestionAnswer} from '../../../types/question';
-import {ChangeEvent, useState, FormEvent, PropsWithChildren} from 'react';
+import {FormEvent, PropsWithChildren} from 'react';
+import {useUserAnswer} from '../../../hooks/use-user-answer';
+import GenreQuestionItem from '../../genre-question-item/genre-question-item';
 
 type QuestionGenreProps = PropsWithChildren<{
   question: QuestionGenre,
@@ -12,7 +14,7 @@ function QuestionGenreScreen(props: QuestionGenreProps): JSX.Element {
   const {question, onAnswer, renderPlayer, children} = props;
   const {answers, genre} = question;
 
-  const [userAnswers, setUserAnswers] = useState([false, false, false, false]);
+  const [userAnswers, handleAnswer, handleAnswerChange] = useUserAnswer(question, onAnswer);
 
   return (
     <section className="game game--genre">
@@ -44,37 +46,20 @@ function QuestionGenreScreen(props: QuestionGenreProps): JSX.Element {
           className="game__tracks"
           onSubmit={(evt: FormEvent<HTMLFormElement>) => {
             evt.preventDefault();
-            onAnswer(question, userAnswers);
+            handleAnswer();
           }}
         >
           {answers.map((answer, id) => {
             const keyValue = `${id}-${answer.src}`;
             return (
-              <div
+              <GenreQuestionItem
+                answer={answer}
+                id={id}
                 key={keyValue}
-                className="track"
-              >
-                {renderPlayer(answer.src, id)}
-                <div className="game__answer">
-                  <input
-                    className="game__input visually-hidden"
-                    type="checkbox"
-                    name="answer"
-                    value={`answer-${id}`}
-                    id={`answer-${id}`}
-                    checked={userAnswers[id]}
-                    onChange={({target}: ChangeEvent<HTMLInputElement>) => {
-                      const value = target.checked;
-                      setUserAnswers([...userAnswers.slice(0, id), value, ...userAnswers.slice(id + 1)]);
-                    }}
-                  />
-                  <label
-                    className="game__check"
-                    htmlFor={`answer-${id}`}
-                  >Отметить
-                  </label>
-                </div>
-              </div>
+                onChange={handleAnswerChange}
+                renderPlayer={renderPlayer}
+                userAnswer={userAnswers[id]}
+              />
             );
           })}
           <button

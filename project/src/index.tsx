@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app';
 import {Provider} from 'react-redux';
-import {reducer} from './store/reducer';
+import {rootReducer as reducer} from './store/root-reducer';
 import {configureStore} from '@reduxjs/toolkit';
 import {createAPI} from './services/api';
 import {requireAuthorization} from './store/action';
@@ -27,7 +27,7 @@ const api = createAPI(
   () => store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth)),
 );
 
-const store = configureStore({
+export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
